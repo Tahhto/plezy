@@ -26,8 +26,10 @@ customized: rows built from Trakt, MDBList and IMDb lists, plus reordering and h
 
 `flutter analyze lib test` is clean. All 35 new tests pass.
 
+Full upstream suite (8,346 tests) and `scripts/checks/check_codegen.py` pass. DiscoverScreen treats
+HomeSectionsProvider as optional, so screens built without a profile session (like the upstream widget tests) still work.
+
 ### Not yet verified
-- Full upstream test suite and `scripts/checks/check_codegen.py` (they were running at the time of writing).
 - Real responses from Trakt, MDBList and IMDb. The cloud container's network blocks those hosts, so the parsers
   are built from documented formats and tested only against hand-written sample responses.
 - Running on a device. Nothing has been clicked through yet.
@@ -89,8 +91,7 @@ customized: rows built from Trakt, MDBList and IMDb lists, plus reordering and h
 ---
 
 ## To do next (after compacting the session)
-1. Check the background run: `scratchpad/codegen.log` and `scratchpad/tests.log` (or re-run
-   `python3 scripts/checks/check_codegen.py` and `bash scripts/run_tests.sh`), and fix any failures.
+1. ~~Check the full test suite and codegen.~~ Done: both pass.
 2. Once GitHub access is fixed, run `git push -u fork feature/custom-home-sections` from
    `/home/user/edde746/plezy` (remote `fork` = `https://github.com/Tahhto/plezy`).
 3. Phase 1, step 4: capture real Trakt / MDBList / IMDb responses and turn them into fixture tests.

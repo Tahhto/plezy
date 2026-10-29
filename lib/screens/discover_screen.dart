@@ -88,11 +88,12 @@ class _DiscoverScreenState extends State<DiscoverScreen>
 
   /// Custom list sections and the user's row order/visibility, merged over
   /// the server hubs by [_hubs].
-  late final HomeSectionsProvider _homeSections;
+  // Optional so the screen still works where no profile session provides it.
+  late final HomeSectionsProvider? _homeSections;
   int _seenLoadGeneration = 0;
 
   List<MediaItem> get _onDeck => _discover.onDeck;
-  List<MediaHub> get _hubs => _homeSections.compose(_discover.hubs);
+  List<MediaHub> get _hubs => _homeSections?.compose(_discover.hubs) ?? _discover.hubs;
   bool get _hasMoreContinueWatching => _discover.hasMoreContinueWatching;
   bool get _isLoading => _discover.isLoading;
   bool get _areHubsLoading => _discover.areHubsLoading;
@@ -356,11 +357,11 @@ class _DiscoverScreenState extends State<DiscoverScreen>
     _discover = context.read<DiscoverProvider>();
     _seenLoadGeneration = _discover.loadGeneration;
     _discover.addListener(_onDiscoverChanged);
-    _homeSections = context.read<HomeSectionsProvider>();
-    _homeSections.addListener(_onDiscoverChanged);
+    _homeSections = context.read<HomeSectionsProvider?>();
+    _homeSections?.addListener(_onDiscoverChanged);
     _updateHubKeys();
     unawaited(_discover.load());
-    unawaited(_homeSections.load());
+    unawaited(_homeSections?.load());
     _startAutoScroll();
   }
 
@@ -472,7 +473,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
   @override
   void dispose() {
     _discover.removeListener(_onDiscoverChanged);
-    _homeSections.removeListener(_onDiscoverChanged);
+    _homeSections?.removeListener(_onDiscoverChanged);
     WidgetsBinding.instance.removeObserver(this);
     _autoScrollTimer?.cancel();
     _indicatorTimer?.cancel();
@@ -495,7 +496,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
       // desktop window-focus gain after hours away should refresh too (#1646).
       final startedFullPass = _discover.refreshIfStale();
       // List and index caches keep this cheap when nothing is stale.
-      if (startedFullPass) unawaited(_homeSections.load());
+      if (startedFullPass) unawaited(_homeSections?.load());
       // Refresh continue watching on mobile only
       // (on desktop, "resumed" fires on every window focus gain)
       if (!startedFullPass && (Platform.isIOS || Platform.isAndroid)) {
@@ -587,7 +588,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
   @override
   void onTabShown() {
     _isTabVisible = true;
-    if (_discover.refreshIfStale()) unawaited(_homeSections.load());
+    if (_discover.refreshIfStale()) unawaited(_homeSections?.load());
     if (!_isAutoScrollPaused) {
       _startAutoScroll();
     }
@@ -642,7 +643,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
 
   Future<void> _refreshFromToolbar() async {
     // An explicit refresh refetches the lists and rebuilds the library index.
-    unawaited(_homeSections.load(force: true));
+    unawaited(_homeSections?.load(force: true));
     final outcome = await _discover.refreshNow();
     if (!mounted) return;
     switch (outcome) {
@@ -663,7 +664,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
     // server-side media never appears until a restart (#1646). When fresh,
     // only Continue Watching refetches — one on-deck call, zero hub calls.
     if (_discover.refreshIfStale()) {
-      unawaited(_homeSections.load());
+      unawaited(_homeSections?.load());
       return;
     }
     unawaited(_discover.refreshContinueWatching());
@@ -673,7 +674,7 @@ class _DiscoverScreenState extends State<DiscoverScreen>
   @override
   void fullRefresh() {
     unawaited(_discover.load());
-    unawaited(_homeSections.load());
+    unawaited(_homeSections?.load());
   }
 
   @override
