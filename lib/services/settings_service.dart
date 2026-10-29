@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import '../models/home_sections/home_layout.dart';
 import '../models/hotkey_model.dart';
 import 'image_cache_service.dart';
 import 'package:plezy/utils/app_logger.dart';
@@ -1101,6 +1102,15 @@ class SettingsService extends BaseSharedPreferencesService {
 
   static StringListPref trackerFilterIdsPref(TrackerService s) =>
       StringListPref('tracker_library_filter_ids_${s.name}');
+
+  /// Custom Home sections plus row order/visibility, per profile (a profile
+  /// switch rebuilds the Home tab against that profile's layout).
+  static JsonPref<HomeLayout> homeLayoutPref(String? profileId) => JsonPref<HomeLayout>(
+    'home_layout_${profileId ?? 'default'}',
+    defaultValue: HomeLayout.empty,
+    encode: (layout) => json.encode(layout.toJson()),
+    decode: HomeLayout.fromJson,
+  );
 
   /// Identity-keyed preference groups. Const list literals are canonicalized,
   /// so every builder at a call site shares one fan-out for the process

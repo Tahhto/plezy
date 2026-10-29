@@ -95,6 +95,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$services$en services = Translations$services$en.internal(_root);
 	late final Translations$addServer$en addServer = Translations$addServer$en.internal(_root);
 	late final Translations$deepLinks$en deepLinks = Translations$deepLinks$en.internal(_root);
+	late final Translations$homeSections$en homeSections = Translations$homeSections$en.internal(_root);
 }
 
 // Path: app
@@ -643,6 +644,12 @@ class Translations$settings$en {
 
 	/// en: 'Always show server names in hub titles.'
 	String get showServerNameOnHubsDescription => 'Always show server names in hub titles.';
+
+	/// en: 'Home Sections'
+	String get homeSections => 'Home Sections';
+
+	/// en: 'Add Trakt, MDBList and IMDb lists as rows, and reorder or hide rows.'
+	String get homeSectionsDescription => 'Add Trakt, MDBList and IMDb lists as rows, and reorder or hide rows.';
 
 	/// en: 'Group Libraries by Server'
 	String get groupLibrariesByServer => 'Group Libraries by Server';
@@ -6158,6 +6165,111 @@ class Translations$deepLinks$en {
 	String get copied => 'Link copied';
 }
 
+// Path: homeSections
+class Translations$homeSections$en {
+	Translations$homeSections$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Home Sections'
+	String get title => 'Home Sections';
+
+	/// en: 'Rows from Trakt, MDBList or IMDb lists show the titles you have in your libraries, in list order. Select a row to move, hide or edit it.'
+	String get intro => 'Rows from Trakt, MDBList or IMDb lists show the titles you have in your libraries, in list order. Select a row to move, hide or edit it.';
+
+	/// en: 'Add List Section'
+	String get addSection => 'Add List Section';
+
+	/// en: 'Rows'
+	String get rows => 'Rows';
+
+	/// en: 'Home rows appear here once the Home tab has loaded.'
+	String get noRows => 'Home rows appear here once the Home tab has loaded.';
+
+	/// en: 'List URL'
+	String get listUrl => 'List URL';
+
+	/// en: 'trakt.tv/users/…/lists/…, mdblist.com/lists/…, imdb.com/list/ls…'
+	String get listUrlHint => 'trakt.tv/users/…/lists/…, mdblist.com/lists/…, imdb.com/list/ls…';
+
+	/// en: 'Not a supported Trakt, MDBList or IMDb list URL'
+	String get unsupportedUrl => 'Not a supported Trakt, MDBList or IMDb list URL';
+
+	/// en: 'Row Title'
+	String get sectionTitle => 'Row Title';
+
+	/// en: 'Show'
+	String get show => 'Show';
+
+	/// en: 'Movies and Shows'
+	String get showAll => 'Movies and Shows';
+
+	/// en: 'Movies Only'
+	String get showMovies => 'Movies Only';
+
+	/// en: 'Shows Only'
+	String get showShows => 'Shows Only';
+
+	/// en: 'Maximum Items'
+	String get maxItems => 'Maximum Items';
+
+	/// en: 'Hide Watched'
+	String get hideWatched => 'Hide Watched';
+
+	/// en: 'Show Watched'
+	String get showWatched => 'Show Watched';
+
+	/// en: 'Move Up'
+	String get moveUp => 'Move Up';
+
+	/// en: 'Move Down'
+	String get moveDown => 'Move Down';
+
+	/// en: 'Move to Top'
+	String get moveToTop => 'Move to Top';
+
+	/// en: 'Hide Row'
+	String get hide => 'Hide Row';
+
+	/// en: 'Show Row'
+	String get unhide => 'Show Row';
+
+	/// en: 'Rename'
+	String get rename => 'Rename';
+
+	/// en: 'Change List URL'
+	String get changeUrl => 'Change List URL';
+
+	/// en: 'Test List'
+	String get test => 'Test List';
+
+	/// en: 'Delete Section'
+	String get delete => 'Delete Section';
+
+	/// en: 'Delete "${title}"?'
+	String deleteConfirm({required Object title}) => 'Delete "${title}"?';
+
+	/// en: 'Hidden'
+	String get hidden => 'Hidden';
+
+	/// en: '${source} list'
+	String customSource({required Object source}) => '${source} list';
+
+	/// en: 'No titles from this list are in your libraries'
+	String get noMatches => 'No titles from this list are in your libraries';
+
+	/// en: '${listed} titles in list, ${owned} in your libraries'
+	String testResult({required Object listed, required Object owned}) => '${listed} titles in list, ${owned} in your libraries';
+
+	/// en: 'Could not load list: ${error}'
+	String failed({required Object error}) => 'Could not load list: ${error}';
+
+	/// en: 'Reset Order and Visibility'
+	String get resetLayout => 'Reset Order and Visibility';
+}
+
 // Path: appIcon.names
 class Translations$appIcon$names$en {
 	Translations$appIcon$names$en.internal(this._root);
@@ -8308,6 +8420,8 @@ extension on Translations {
 			'settings.useGlobalHubsDescription' => 'Show unified home hubs. Otherwise use library recommendations.',
 			'settings.showServerNameOnHubs' => 'Show Server Name on Hubs',
 			'settings.showServerNameOnHubsDescription' => 'Always show server names in hub titles.',
+			'settings.homeSections' => 'Home Sections',
+			'settings.homeSectionsDescription' => 'Add Trakt, MDBList and IMDb lists as rows, and reorder or hide rows.',
 			'settings.groupLibrariesByServer' => 'Group Libraries by Server',
 			'settings.groupLibrariesByServerDescription' => 'Group sidebar libraries under each media server.',
 			'settings.alwaysKeepSidebarOpen' => 'Always Keep Sidebar Open',
@@ -8608,10 +8722,10 @@ extension on Translations {
 			'themeEditor.slots.surface' => 'Surface',
 			'themeEditor.slots.outline' => 'Outline',
 			'themeEditor.slots.text' => 'Text',
-			'themeEditor.slots.textMuted' => 'Secondary text',
-			'themeEditor.slots.accent' => 'Accent',
 			_ => null,
 		} ?? switch (path) {
+			'themeEditor.slots.textMuted' => 'Secondary text',
+			'themeEditor.slots.accent' => 'Accent',
 			'themeEditor.opacity' => 'Opacity',
 			'themeEditor.hexHint' => '#RRGGBB or #AARRGGBB',
 			'themeEditor.fromOtherThemes' => 'From other themes',
@@ -9122,10 +9236,10 @@ extension on Translations {
 			'profiles.pinExplain' => '4-digit PIN required to switch profiles.',
 			'profiles.continueButton' => 'Continue',
 			'profiles.pinsDontMatch' => 'PINs don\'t match',
-			'profiles.tokenIdentityMismatch' => 'The Plex profile token resolved to an unexpected server',
-			'connections.sectionTitle' => 'Connections',
 			_ => null,
 		} ?? switch (path) {
+			'profiles.tokenIdentityMismatch' => 'The Plex profile token resolved to an unexpected server',
+			'connections.sectionTitle' => 'Connections',
 			'connections.addConnection' => 'Add connection',
 			'connections.addConnectionSubtitleNoProfile' => 'Sign in with Plex or connect a Jellyfin or Emby server',
 			'connections.addConnectionSubtitleScoped' => ({required Object displayName}) => 'Add to ${displayName}: Plex, Jellyfin, Emby, or another profile connection',
@@ -9636,10 +9750,10 @@ extension on Translations {
 			'liveTv.recordSettings.endLate' => 'End late (seconds)',
 			'liveTv.recordSettings.newOnly' => 'Only new episodes',
 			'liveTv.recordSettings.anyChannel' => 'Record on any channel',
-			'liveTv.recordSettings.anyTime' => 'Record at any time',
-			'liveTv.recordSettings.skipInLibrary' => 'Skip episodes already in the library',
 			_ => null,
 		} ?? switch (path) {
+			'liveTv.recordSettings.anyTime' => 'Record at any time',
+			'liveTv.recordSettings.skipInLibrary' => 'Skip episodes already in the library',
 			'liveTv.recordSettings.keepUpTo' => 'Episodes to keep',
 			'liveTv.recordSettings.keepUpToHint' => '0 keeps every episode',
 			'liveTv.startingInMinutes' => ({required Object minutes}) => 'Starting in ${minutes} min',
@@ -10150,10 +10264,10 @@ extension on Translations {
 			'performanceOverlay.fps' => 'FPS',
 			'performanceOverlay.decoderAndroidHw' => 'Android HW',
 			'performanceOverlay.decoderNvidiaHw' => 'NVIDIA HW',
-			'performanceOverlay.decoderQualcommHw' => 'Qualcomm HW',
-			'performanceOverlay.decoderMediatekHw' => 'MediaTek HW',
 			_ => null,
 		} ?? switch (path) {
+			'performanceOverlay.decoderQualcommHw' => 'Qualcomm HW',
+			'performanceOverlay.decoderMediatekHw' => 'MediaTek HW',
 			'performanceOverlay.decoderExynosHw' => 'Exynos HW',
 			'performanceOverlay.decoderSoftware' => 'Software',
 			'performanceOverlay.decoderHardware' => 'Hardware',
@@ -10428,6 +10542,38 @@ extension on Translations {
 			'deepLinks.openAsProfile' => ({required Object name}) => 'Open as ${name}',
 			'deepLinks.copy' => 'Copy',
 			'deepLinks.copied' => 'Link copied',
+			'homeSections.title' => 'Home Sections',
+			'homeSections.intro' => 'Rows from Trakt, MDBList or IMDb lists show the titles you have in your libraries, in list order. Select a row to move, hide or edit it.',
+			'homeSections.addSection' => 'Add List Section',
+			'homeSections.rows' => 'Rows',
+			'homeSections.noRows' => 'Home rows appear here once the Home tab has loaded.',
+			'homeSections.listUrl' => 'List URL',
+			'homeSections.listUrlHint' => 'trakt.tv/users/…/lists/…, mdblist.com/lists/…, imdb.com/list/ls…',
+			'homeSections.unsupportedUrl' => 'Not a supported Trakt, MDBList or IMDb list URL',
+			'homeSections.sectionTitle' => 'Row Title',
+			'homeSections.show' => 'Show',
+			'homeSections.showAll' => 'Movies and Shows',
+			'homeSections.showMovies' => 'Movies Only',
+			'homeSections.showShows' => 'Shows Only',
+			'homeSections.maxItems' => 'Maximum Items',
+			'homeSections.hideWatched' => 'Hide Watched',
+			'homeSections.showWatched' => 'Show Watched',
+			'homeSections.moveUp' => 'Move Up',
+			'homeSections.moveDown' => 'Move Down',
+			'homeSections.moveToTop' => 'Move to Top',
+			'homeSections.hide' => 'Hide Row',
+			'homeSections.unhide' => 'Show Row',
+			'homeSections.rename' => 'Rename',
+			'homeSections.changeUrl' => 'Change List URL',
+			'homeSections.test' => 'Test List',
+			'homeSections.delete' => 'Delete Section',
+			'homeSections.deleteConfirm' => ({required Object title}) => 'Delete "${title}"?',
+			'homeSections.hidden' => 'Hidden',
+			'homeSections.customSource' => ({required Object source}) => '${source} list',
+			'homeSections.noMatches' => 'No titles from this list are in your libraries',
+			'homeSections.testResult' => ({required Object listed, required Object owned}) => '${listed} titles in list, ${owned} in your libraries',
+			'homeSections.failed' => ({required Object error}) => 'Could not load list: ${error}',
+			'homeSections.resetLayout' => 'Reset Order and Visibility',
 			_ => null,
 		};
 	}

@@ -79,6 +79,9 @@ typedef CollectionMembership = ({MediaItem collection, List<String> memberIds});
 /// and refuses it; a new sign-in changes nothing), and [offline].
 enum HealthStatus { online, offline, authError, accessDenied }
 
+/// One row of [MediaServerClient.fetchExternalIdIndex].
+typedef ExternalIdIndexEntry = ({MediaItem item, ExternalIds ids});
+
 abstract interface class GracefullyCloseable {
   Future<void> closeGracefully({Duration drainTimeout});
 }
@@ -730,6 +733,15 @@ abstract class MediaServerClient {
     String? plexGuid,
     ExternalSeasonRef? season,
   });
+
+  /// Every movie and show the user can see on this server, each with the
+  /// external ids the server knows for it. Backs the custom Home sections
+  /// (Trakt / MDBList / IMDb lists), which match hundreds of list entries at
+  /// once — one paged sweep is far cheaper than [findByExternalIds] per entry.
+  ///
+  /// Items are stamped with their library where the backend reports it.
+  /// Entries with no external id are left out. Failures throw.
+  Future<List<ExternalIdIndexEntry>> fetchExternalIdIndex({AbortController? abort});
 
   /// Chapters and intro/credits markers for [itemId]. Plex returns both in one
   /// round trip; Jellyfin combines item-level chapters with best-effort native

@@ -4909,6 +4909,42 @@ class PlexClient
     return _gateExternalIdMatches(ordered.values, kind: kind, season: season);
   }
 
+  static const int _externalIdIndexPageSize = 1000;
+
+  /// Server-wide `/library/all` sweep per type with `includeGuids=1`; rows
+  /// carry their own `librarySectionID`, so no per-section fan-out is needed.
+  /// Both the modern `Guid` array and a legacy agent's scalar `guid` are read.
+  @override
+  Future<List<ExternalIdIndexEntry>> fetchExternalIdIndex({AbortController? abort}) async {
+    final entries = <ExternalIdIndexEntry>[];
+    for (final plexType in const [1, 2]) {
+      var start = 0;
+      while (true) {
+        final response = await _getWithFailover(
+          '/library/all',
+          queryParameters: {
+            'type': plexType,
+            'includeGuids': 1,
+            ..._buildPaginationParams(start, _externalIdIndexPageSize),
+          },
+          abort: abort,
+        );
+        abort?.throwIfAborted();
+        final rows = _getMetadataJsonList(response);
+        for (final row in rows) {
+          final guid = row['Guid'];
+          final modern = guid is List ? ExternalIds.fromGuids(guid) : const ExternalIds();
+          final ids = modern.fillFrom(ExternalIds.fromLegacyPlexGuid(row['guid']));
+          if (!ids.hasCatalogIds) continue;
+          entries.add((item: PlexMappers.mediaItem(_createTaggedMetadataWithLibrary(row)), ids: ids));
+        }
+        if (rows.length < _externalIdIndexPageSize) break;
+        start += rows.length;
+      }
+    }
+    return entries;
+  }
+
   /// One reverse-lookup request under the lookup deadline; see
   /// [findByExternalIds] for why failover is off.
   Future<MediaServerResponse> _lookupRequest(

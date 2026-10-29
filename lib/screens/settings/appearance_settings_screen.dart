@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../i18n/strings.g.dart';
 import '../../providers/catalog_sources_provider.dart';
+import '../../providers/home_sections_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../services/settings_service.dart' hide ThemeMode;
 import '../../focus/focusable_slider.dart';
@@ -18,6 +19,7 @@ import '../../widgets/settings_page.dart';
 import '../../widgets/settings_builder.dart';
 import '../../widgets/settings_section.dart';
 import 'app_icon_setting.dart';
+import 'home_sections_screen.dart';
 import 'settings_utils.dart';
 import 'theme_settings_screen.dart';
 
@@ -36,6 +38,7 @@ class AppearanceSettingsScreen extends StatelessWidget {
     // Nullable watch: hosts without the profile session scope (tests) simply
     // never show the Explore toggle, mirroring the tab's own visibility.
     final hasExplore = context.watch<CatalogSourcesProvider?>()?.hasAnySource ?? false;
+    final hasHomeSections = context.watch<HomeSectionsProvider?>() != null;
     return SettingsPage(
       title: Text(t.settings.appearance),
       children: [
@@ -117,6 +120,13 @@ class AppearanceSettingsScreen extends StatelessWidget {
               ),
             _continueWatchingActionSelector(),
             _episodeActionSelector(),
+            if (hasHomeSections)
+              SettingNavigationTile(
+                icon: Symbols.dashboard_customize_rounded,
+                title: t.settings.homeSections,
+                subtitle: t.settings.homeSectionsDescription,
+                destinationBuilder: (_) => const HomeSectionsScreen(),
+              ),
             SettingSwitchTile(
               pref: SettingsService.useGlobalHubs,
               icon: Symbols.home_rounded,

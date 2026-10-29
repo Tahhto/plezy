@@ -113,6 +113,12 @@ class TraktClient implements DisposableTrackerClient {
     return TrackerPage.fromResponse(res, _decodeMedia(res.body));
   }
 
+  /// Authenticated GET of an arbitrary API path (with query), for callers
+  /// that parse the rows themselves — the custom Home sections read user
+  /// lists, watchlists and catalog feeds through this. Throws like every
+  /// other request on a non-2xx status.
+  Future<http.Response> getRaw(String pathAndQuery) => _requestResponse('GET', pathAndQuery);
+
   /// Personalized recommendations. OAuth-required, limit-only (no pagination).
   Future<List<TraktCatalogMedia>> getRecommended(
     TraktCatalogType type, {

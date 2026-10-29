@@ -15,6 +15,7 @@ import '../profiles/profile_connection_registry.dart';
 import '../providers/catalog_sources_provider.dart';
 import '../providers/companion_remote_provider.dart';
 import '../providers/discover_provider.dart';
+import '../providers/home_sections_provider.dart';
 import '../providers/explore_provider.dart';
 import '../providers/hidden_libraries_provider.dart';
 import '../providers/libraries_provider.dart';
@@ -29,6 +30,7 @@ import '../screens/video_player_screen.dart';
 import '../services/api_cache.dart';
 import '../services/agent_control_service.dart';
 import '../services/catalog/catalog_library_matcher.dart';
+import '../services/home_sections/home_list_fetcher.dart';
 import '../services/music/music_playback_service.dart';
 import '../services/music/music_playback_service_impl.dart';
 import '../services/music/music_session_store.dart';
@@ -247,6 +249,19 @@ class _ProfileSessionScreenState extends State<ProfileSessionScreen> {
                     // Defers push-triggered hub refetches while the player is
                     // up — same playback-quiet policy as the resume gate.
                     isRefreshBlocked: () => VideoPlayerScreenState.activeGlobalKey != null,
+                    profileId: activeId,
+                  );
+                },
+              ),
+              ChangeNotifierProvider(
+                create: (context) {
+                  final trackers = context.read<TrackersProvider>();
+                  return HomeSectionsProvider(
+                    context.read<MultiServerProvider>(),
+                    context.read<HiddenLibrariesProvider>(),
+                    // Read per request: the Trakt session can connect or drop
+                    // mid-session, and private lists need it when present.
+                    HomeListFetcher(traktClient: () => trackers.traktCatalogClient),
                     profileId: activeId,
                   );
                 },

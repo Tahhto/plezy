@@ -1729,6 +1729,50 @@ mixin _JellyfinBrowseMethods on _JellyfinClientInternals {
     return Future.wait([for (final item in kept) _withLibraryFromAncestors(item)]);
   }
 
+  /// Page size of [fetchExternalIdIndex]. Rows carry only browse fields plus
+  /// `ProviderIds`, so a page stays small even at this size.
+  static const int _externalIdIndexPageSize = 500;
+
+  /// One paged `/Items` sweep per video library, so every row is stamped
+  /// with the library it came from (hidden-library filtering and navigation
+  /// both need it) without the per-item `/Ancestors` call
+  /// [findByExternalIds] pays.
+  @override
+  Future<List<ExternalIdIndexEntry>> fetchExternalIdIndex({AbortController? abort}) async {
+    final libraries = await _searchLibraryViews(abort: abort);
+    final entries = <ExternalIdIndexEntry>[];
+    for (final library in libraries) {
+      if (library.kind == MediaKind.artist) continue;
+      var start = 0;
+      while (true) {
+        final rows = await _fetchItemsArray('/Items', {
+          'userId': connection.userId,
+          'ParentId': library.id,
+          'Recursive': 'true',
+          'IncludeItemTypes': 'Movie,Series',
+          'CollapseBoxSetItems': 'false',
+          'Fields': 'ProviderIds,$_browseFields',
+          'StartIndex': start.toString(),
+          'Limit': _externalIdIndexPageSize.toString(),
+          'EnableTotalRecordCount': 'false',
+          ...jellyfinImageQueryParameters,
+        }, abort: abort);
+        for (final row in rows) {
+          final providerIds = row['ProviderIds'];
+          if (providerIds is! Map) continue;
+          final ids = ExternalIds.fromJellyfinProviderIds(providerIds.cast<String, Object?>());
+          if (!ids.hasCatalogIds) continue;
+          final item = _mapItem(row);
+          if (item == null) continue;
+          entries.add((item: item.copyWith(libraryId: library.id, libraryTitle: library.title), ids: ids));
+        }
+        if (rows.length < _externalIdIndexPageSize) break;
+        start += rows.length;
+      }
+    }
+    return entries;
+  }
+
   /// Keep only the series that actually have [seasonIndex]. One
   /// `fetchChildren` per candidate, issued concurrently because the match list
   /// is deliberately never truncated (see
